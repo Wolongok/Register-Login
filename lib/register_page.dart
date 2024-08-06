@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pplg2/custom_checkbox.dart';
 import 'package:pplg2/login_page.dart';
+import 'package:pplg2/widgets/my_button.dart';
+import 'package:pplg2/widgets/my_textfield.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -10,16 +12,13 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPage extends State<RegisterPage> {
-
   final FocusNode _usernameFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final ValueNotifier<bool> _isTextNotEmpty = ValueNotifier<bool>(false);
   Color _usernameBackgroundColor = Color(0xFF141519);
   Color _passwordBackgroundColor = Color(0xFF141519);
   bool _isButtonEnabled = false;
-  bool _obsecureText = true;
   bool isIconVisible = false;
   bool isChecked = false;
 
@@ -29,17 +28,33 @@ class _RegisterPage extends State<RegisterPage> {
 
     _usernameFocusNode.addListener(() {
       setState(() {
-        _usernameBackgroundColor = _usernameFocusNode.hasFocus
-            ? Color(0xFF24252A)
-            : Color(0xFF141519);
+        _usernameBackgroundColor =
+            _usernameFocusNode.hasFocus ? Color(0xFF24252A) : Color(0xFF141519);
       });
     });
 
     _passwordFocusNode.addListener(() {
       setState(() {
         _passwordBackgroundColor =
-        _passwordFocusNode.hasFocus ? Color(0xFF24252A) : Color(0xFF141519);
+            _passwordFocusNode.hasFocus ? Color(0xFF24252A) : Color(0xFF141519);
       });
+    });
+
+    void _checkIfButtonShouldBeEnabled() {
+      setState(() {
+        _isButtonEnabled = _usernameController.text.isNotEmpty &&
+            _passwordController.text.isNotEmpty;
+      });
+    }
+
+    _usernameController.addListener(_checkIfButtonShouldBeEnabled);
+    _passwordController.addListener(_checkIfButtonShouldBeEnabled);
+  }
+
+  void _checkIfButtonShouldBeEnabled() {
+    setState(() {
+      _isButtonEnabled = _usernameController.text.isNotEmpty &&
+          _passwordController.text.isNotEmpty;
     });
   }
 
@@ -91,86 +106,16 @@ class _RegisterPage extends State<RegisterPage> {
                   image: AssetImage('assets/Crunch.jpg'),
                   width: 1600,
                 ),
-              ),              SizedBox(height: 12.0),
-
-              Container(
-                color: _usernameBackgroundColor,
-                child: TextField(
-                  focusNode: _usernameFocusNode,
-                  controller: _usernameController,
-                  cursorColor: Color(0xFFFE6407),
-                  cursorHeight: 20,
-                  style: TextStyle(color: Colors.white,),
-                  decoration: InputDecoration(
-                    labelStyle: TextStyle(
-                      color: Color(0xFFD4D5D7),
-                    ),
-                    labelText: 'Email',
-                    filled: true,
-                    contentPadding: EdgeInsets.only(top: 5, left: 15, bottom: 10),
-                    fillColor: Colors.transparent,
-                    alignLabelWithHint: true,
-                    floatingLabelBehavior: FloatingLabelBehavior.auto,
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF545456),width: 2),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFFFE6407),width: 2),
-                    ),
-                  ),
-                ),
               ),
-              SizedBox(height: 16.0),
-              Container(
-                color: _passwordBackgroundColor,
-                child: TextField(
-                  focusNode: _passwordFocusNode,
-                  controller: _passwordController,
-                  obscureText: _obsecureText,
-                  cursorColor: Color(0xFFFE6407),
-                  cursorHeight: 20,
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    suffixIcon: ValueListenableBuilder<TextEditingValue>(
-                      valueListenable: _passwordController,
-                      builder: (context, value, child) {
-                        bool shouldShowIcon = value.text.isNotEmpty || _passwordFocusNode.hasFocus;
-                        return shouldShowIcon
-                            ? GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _obsecureText = !_obsecureText;
-                            });
-                          },
-                          child: Icon(
-                            _obsecureText ? Icons.visibility_off : Icons.visibility,
-                            color: Color(0xFFD8D9DB),
-                          ),
-                        )
-                            : SizedBox.shrink();
-                      },
-                    ),
-                    labelStyle: TextStyle(color: Color(0xFFD4D5D7), fontSize: 15),
-                    labelText: 'Password',
-                    filled: true,
-                    fillColor: Colors.transparent,
-                    alignLabelWithHint: true,
-                    contentPadding: EdgeInsets.only(top: 5, left: 15, bottom: 10),
-                    floatingLabelBehavior: FloatingLabelBehavior.auto,
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF545456),width: 2),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFFFE6407),width: 2),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 16.0),
+              SizedBox(height: 12.0),
+              MyTextfield(label: "Email", isObsecure: false, controller: _usernameController, color: _usernameBackgroundColor, focusNode: _usernameFocusNode)
+              ,SizedBox(height: 16.0),
+              MyTextfield(label: "Password", isObsecure: true, controller: _passwordController, color: _passwordBackgroundColor, focusNode: _passwordFocusNode)
+              ,SizedBox(height: 16.0),
               Row(
                 children: [
                   Transform.scale(
-                    scale: 1,  // Scale factor
+                    scale: 1, // Scale factor
                     child: Custom_Checkbox(
                       size: 20,
                       iconSize: 16,
@@ -195,7 +140,6 @@ class _RegisterPage extends State<RegisterPage> {
                 ],
               ),
               SizedBox(height: 10),
-
               SizedBox(
                 child: Row(
                   children: [
@@ -209,7 +153,9 @@ class _RegisterPage extends State<RegisterPage> {
                             fontSize: 11.5,
                           ),
                           children: [
-                            TextSpan(text: "By creating an account you're agreeing to our "),
+                            TextSpan(
+                                text:
+                                    "By creating an account you're agreeing to our "),
                             TextSpan(
                               text: "Terms",
                               style: TextStyle(color: Color(0xFFFE6407)),
@@ -228,27 +174,7 @@ class _RegisterPage extends State<RegisterPage> {
                 ),
               ),
               SizedBox(height: 16.0),
-              SizedBox(
-                width: 400,
-                child: ElevatedButton(
-                  onPressed: _isButtonEnabled ? () {} : null,
-                  child: Text("CREATE ACCOUNT"),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.black,
-                    backgroundColor:
-                    _isButtonEnabled ? Color(0xFFFE6407) : Colors.black,
-                    disabledForegroundColor: Color(0xFF595959),
-                    disabledBackgroundColor: Colors.black,
-                    side: BorderSide(
-                      color: _isButtonEnabled
-                          ? Color(0xFFFE6407)
-                          : Color(0xFF595959),
-                      width: 1.5,
-                    ),
-                    shape: RoundedRectangleBorder(),
-                  ),
-                ),
-              ),
+              MYButton(isButtonEnabled: _isButtonEnabled),
               Container(height: 25),
               IntrinsicHeight(
                 child: Row(
@@ -260,17 +186,23 @@ class _RegisterPage extends State<RegisterPage> {
                     ),
                     SizedBox(
                       width: 63,
-                      child:
-                      TextButton(
+                      child: TextButton(
                         onPressed: () {
                           Navigator.push(
-                              context, MaterialPageRoute(builder: (context) => LoginPage()),
-                          );                        },
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginPage()),
+                          );
+                        },
                         style: TextButton.styleFrom(
-
                           backgroundColor: Colors.transparent, // Text color
                         ),
-                        child: Text('Log In', style: TextStyle(color: Color(0xFFFE6407), fontWeight: FontWeight.normal),),
+                        child: Text(
+                          'Log In',
+                          style: TextStyle(
+                              color: Color(0xFFFE6407),
+                              fontWeight: FontWeight.normal),
+                        ),
                       ),
                     ),
                     Spacer(),

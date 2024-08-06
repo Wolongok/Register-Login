@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pplg2/register_page.dart';
+import 'package:pplg2/widgets/my_button.dart';
+import 'package:pplg2/widgets/my_textfield.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,7 +18,6 @@ class _LoginPageState extends State<LoginPage> {
   Color _usernameBackgroundColor = Color(0xFF141519);
   Color _passwordBackgroundColor = Color(0xFF141519);
   bool _isButtonEnabled = false;
-  bool _obsecureText = true;
   bool isIconVisible = false;
 
   @override
@@ -121,79 +122,9 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               Container(height: 30),
-              Container(
-                color: _usernameBackgroundColor,
-                child: TextField(
-                  focusNode: _usernameFocusNode,
-                  controller: _usernameController,
-                  cursorColor: Color(0xFFFE6407),
-                  cursorHeight: 20,
-                  style: TextStyle(color: Colors.white,),
-                  decoration: InputDecoration(
-                    labelStyle: TextStyle(
-                      color: Color(0xFFD4D5D7),
-                    ),
-                    labelText: 'Email',
-                    filled: true,
-                    contentPadding: EdgeInsets.only(top: 5, left: 15, bottom: 10),
-                    fillColor: Colors.transparent,
-                    alignLabelWithHint: true,
-                    floatingLabelBehavior: FloatingLabelBehavior.auto,
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF545456),width: 2),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFFFE6407),width: 2),
-                    ),
-                  ),
-                ),
-              ),
+              MyTextfield(label: "Email", isObsecure: false, controller: _usernameController, color: _usernameBackgroundColor, focusNode: _usernameFocusNode),
               SizedBox(height: 16.0),
-              Container(
-                color: _passwordBackgroundColor,
-                child: TextField(
-                  focusNode: _passwordFocusNode,
-                  controller: _passwordController,
-                  obscureText: _obsecureText,
-                  cursorColor: Color(0xFFFE6407),
-                  cursorHeight: 20,
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    suffixIcon: ValueListenableBuilder<TextEditingValue>(
-                      valueListenable: _passwordController,
-                      builder: (context, value, child) {
-                        bool shouldShowIcon = value.text.isNotEmpty || _passwordFocusNode.hasFocus;
-                        return shouldShowIcon
-                            ? GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _obsecureText = !_obsecureText;
-                            });
-                          },
-                          child: Icon(
-                            _obsecureText ? Icons.visibility_off : Icons.visibility,
-                            color: Color(0xFFD8D9DB),
-                          ),
-                        )
-                            : SizedBox.shrink();
-                      },
-                    ),
-                    labelStyle: TextStyle(color: Color(0xFFD4D5D7), fontSize: 15),
-                    labelText: 'Password',
-                    filled: true,
-                    fillColor: Colors.transparent,
-                    alignLabelWithHint: true,
-                    contentPadding: EdgeInsets.only(top: 5, left: 15, bottom: 10),
-                    floatingLabelBehavior: FloatingLabelBehavior.auto,
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF545456),width: 2),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFFFE6407),width: 2),
-                    ),
-                  ),
-                ),
-              ),
+              MyTextfield(label: "Password", isObsecure: true, controller: _passwordController, color: _passwordBackgroundColor, focusNode: _passwordFocusNode),
               SizedBox(height: 16.0),
               SizedBox(
                 child: Row(
@@ -227,27 +158,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               Container(height: 15),
-              SizedBox(
-                width: 400,
-                child: ElevatedButton(
-                  onPressed: _isButtonEnabled ? () {} : null,
-                  child: Text("LOG IN"),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.black,
-                    backgroundColor:
-                        _isButtonEnabled ? Color(0xFFFE6407) : Colors.black,
-                    disabledForegroundColor: Color(0xFF595959),
-                    disabledBackgroundColor: Colors.black,
-                    side: BorderSide(
-                      color: _isButtonEnabled
-                          ? Color(0xFFFE6407)
-                          : Color(0xFF595959),
-                      width: 1.5,
-                    ),
-                    shape: RoundedRectangleBorder(),
-                  ),
-                ),
-              ),
+              MYButton(isButtonEnabled: _isButtonEnabled),
               Container(height: 25),
 
               IntrinsicHeight(
@@ -255,16 +166,14 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     Spacer(),
                     TextButton(
-                      onPressed: () {
-                        // Your onPressed function here
-                      },
+                      onPressed: () {},
                       style: TextButton.styleFrom(
-                        backgroundColor: Colors.transparent, // Text color
+                        backgroundColor: Colors.transparent,
                       ),
                       child: Text('Forgot Password?', style: TextStyle(color: Color(0xFFFE6407), fontWeight: FontWeight.normal),),
                     ),
                     SizedBox(
-                      height: 14, // Adjust this value to your desired height
+                      height: 14,
                       child: VerticalDivider(
                         color: Colors.white,
                         thickness: 1,
@@ -278,7 +187,7 @@ class _LoginPageState extends State<LoginPage> {
                         );
                       },
                       style: TextButton.styleFrom(
-                        backgroundColor: Colors.transparent, // Text color
+                        backgroundColor: Colors.transparent,
                       ),
                       child: Text('Create Account', style: TextStyle(color: Color(0xFFFE6407), fontWeight: FontWeight.normal),),
                     ),
